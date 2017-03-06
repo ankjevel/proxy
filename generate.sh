@@ -6,12 +6,10 @@ ENDPOINT=$(echo $ENDPOINT | sed -e 's/\/+$//')
 cat <<EOF > /etc/nginx/conf.d/default.conf
 server {
   server_tokens off;
+  charset UTF-8;
 
   location / {
     rewrite /(.*)/\$ /\$1;
-    proxy_buffering off;
-    proxy_set_header Host \$host;
-    proxy_set_header X-Real-IP \$remote_addr;
     proxy_pass $ENDPOINT/;
   }
 }
