@@ -1,7 +1,5 @@
 #!/bin/bash
-
-ENDPOINT=$([[ ! -z $ENDPOINT ]] && echo "$ENDPOINT" || echo "https://test.sh")
-ENDPOINT=$(echo $ENDPOINT | sed -e 's/\/+$//')
+ENDPOINT=$(echo ${ENDPOINT:-"https://test.sh"} | sed -e 's/\/+$//')
 
 cat <<EOF > /etc/nginx/conf.d/default.conf
 server {
@@ -9,8 +7,12 @@ server {
   charset UTF-8;
 
   location / {
-    rewrite /(.*)/\$ /\$1;
-    proxy_pass $ENDPOINT/;
+    proxy_connect_timeout 5m;
+    proxy_send_timeout    5m;
+    proxy_read_timeout    5m;
+    send_timeout          5m;
+    rewrite               /(.*)/\$  /\$1;
+    proxy_pass            $ENDPOINT/;
   }
 }
 EOF
