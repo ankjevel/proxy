@@ -1,6 +1,7 @@
 FROM nginx:1.11
 
 ENV ENDPOINT https://test.sh
+ENV TIMEOUT 1m
 
 WORKDIR /app/
 
